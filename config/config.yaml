@@ -1,0 +1,358 @@
+# =============================================================================
+# CICIoT2023 AI-based IoT IDS — global configuration
+# Loaded by every module via  src.utils.load_config()
+# =============================================================================
+
+project:
+  name: ciciot2023-ids
+  version: "1.0.0"
+  description: "AI-based Intrusion Detection System for IoT/embedded networks"
+  research_question: >
+    How can machine learning be used to detect and classify cyber attacks
+    in IoT network traffic while maintaining sufficiently low computational
+    and inference costs for deployment on resource-constrained edge devices?
+  seed: 42
+  timezone: "UTC"
+
+# -----------------------------------------------------------------------------
+# Dataset
+# -----------------------------------------------------------------------------
+dataset:
+  name: CICIoT2023
+  source_url: "https://www.unb.ca/cic/datasets/iotdataset-2023.html"
+  citation: >
+    E. C. P. Neto, S. Dadkhah, R. Ferreira, A. Zohourian, J. Lu, A. A. Ghorbani,
+    "CICIoT2023: A real-time dataset and benchmark for IoT intrusion detection",
+    Elsevier Internet of Things, 2024.
+  doi: "10.1016/j.iot.2024.101014"
+  # The CSV release is many partition files (~46.7M flow records in total).
+  # We NEVER load the entire corpus into a single pandas DataFrame.
+  csv_dir: data/raw/CICIoT2023
+  primary_format: csv            # do NOT start with PCAP for V1
+  expected_rows: 46_700_000      # approximate, validated at ingestion time
+  label_column: "label"
+
+# -----------------------------------------------------------------------------
+# Spark ingestion layer (large-data)
+# -----------------------------------------------------------------------------
+spark:
+  app_name: ciciot2023_ingest
+  master: "local[*]"             # override to yarn / k8s for cluster runs
+  driver_memory: "8g"
+  executor_memory: "8g"
+  executor_cores: 4
+  shuffle_partitions: 200
+  csv_infer_schema: true
+  csv_header: true
+
+# -----------------------------------------------------------------------------
+# Sampling strategy
+# -----------------------------------------------------------------------------
+sampling:
+  # Never pull the full 46M rows into the ML stage blindly.
+  # Stratified, reproducible per class.
+  seed: 42
+  datasets:
+    A_original_distribution:
+      purpose: "realistic class distribution"
+      rows_per_class: 250_000            # capped; minority classes use all rows
+      total_target: ~2_000_000
+    B_balanced_binary:
+      purpose: "fair binary model comparison"
+      benign_rows: 500_000
+      attack_rows: 500_000
+      total_target: 1_000_000
+    C_stratified_multiclass:
+      purpose: "fair 8-class attack classification"
+      rows_per_family: 80_000
+      total_target: ~640_000
+    D_edge_lightweight:
+      purpose: "lightweight model training/deployment"
+      rows_per_class: 20_000
+      total_target: ~200_000
+
+# -----------------------------------------------------------------------------
+# Train / Validation / Test split
+# -----------------------------------------------------------------------------
+split:
+  train: 0.70
+  val:   0.15
+  test:  0.15
+  stratify: true                 # ALWAYS stratify on the label
+  # Fit preprocessing ONLY on TRAIN. Never on the full corpus before splitting.
+  fit_on: train
+  seed: 42
+
+# -----------------------------------------------------------------------------
+# Three ML tasks (per spec section 9)
+# -----------------------------------------------------------------------------
+tasks:
+  binary:
+    name: "Binary IDS"
+    classes: { 0: "Benign", 1: "Attack" }
+    question: "Can the model detect whether traffic is malicious?"
+    deployment_model: true
+  family:
+    name: "Attack-family classification (8 classes)"
+    classes:
+      - Benign
+      - DDoS
+      - DoS
+      - Recon
+      - Mirai
+      - Spoofing
+      - Web-based
+      - Brute Force
+    question: "If traffic is malicious, what family of attack is occurring?"
+  finegrained:
+    name: "Fine-grained attack classification (27 attacks)"
+    question: "Can the model identify the specific attack?"
+    deployment_model: false      # academic experiment only
+
+# -----------------------------------------------------------------------------
+# Label taxonomy — individual attack -> family mapping
+# (27 attacks -> 7 attack families + Benign, per CICIoT2023 paper)
+# -----------------------------------------------------------------------------
+label_taxonomy:
+  Benign:
+    family: Benign
+    attacks:
+      - Benign
+  DDoS:
+    family: DDoS
+    attacks:
+      - DDoS-UDP_Flood
+      - DDoS-TCP_Flood
+      - DDoS-SYN_Flood
+      - DDoS-ICMP_Flood
+      - DDoS-HTTP_Flood
+      - DDoS-HTTPS_Flood
+  DoS:
+    family: DoS
+    attacks:
+      - DoS-TCP_Flood
+      - DoS-UDP_Flood
+      - DoS-SYN_Flood
+      - DoS-HTTP_Flood
+  Recon:
+    family: Recon
+    attacks:
+      - Recon-Port_Scan
+      - Recon-OS_Scan
+      - Recon-Ping_Sweep
+      - Recon-Host_Discovery
+  Mirai:
+    family: Mirai
+    attacks:
+      - Mirai-greeth_flood
+      - Mirai-greip_flood
+      - Mirai-udpplain_flood
+      - Mirai-ackomploitation
+  Spoofing:
+    family: Spoofing
+    attacks:
+      - MITM-ArpSpoofing
+      - DNS_Spoofing
+  Web-based:
+    family: Web-based
+    attacks:
+      - SqlInjection
+      - BrowserHijacking
+      - CommandInjection
+      - Backdoor_Malware
+      - XSS
+      - Uploading_Attack
+  BruteForce:
+    family: Brute Force
+    attacks:
+      - DictionaryBruteForce
+
+# -----------------------------------------------------------------------------
+# Model candidates  (spec section 14, 15)
+# -----------------------------------------------------------------------------
+models:
+  baselines:
+    - name: LogisticRegression
+      params:
+        max_iter: 1000
+        class_weight: balanced
+        n_jobs: -1
+      requires_scaling: true
+    - name: DecisionTree
+      params:
+        max_depth: 20
+        class_weight: balanced
+        random_state: 42
+      requires_scaling: false
+  candidates:
+    - name: RandomForest
+      params:
+        n_estimators: 200
+        max_depth: 30
+        max_features: "sqrt"
+        class_weight: balanced_subsample
+        n_jobs: -1
+        random_state: 42
+      requires_scaling: false
+    - name: XGBoost
+      params:
+        n_estimators: 300
+        max_depth: 10
+        learning_rate: 0.1
+        subsample: 0.9
+        colsample_bytree: 0.9
+        tree_method: hist
+        n_jobs: -1
+        random_state: 42
+      requires_scaling: false
+    - name: LightGBM
+      params:
+        n_estimators: 400
+        max_depth: -1
+        learning_rate: 0.1
+        num_leaves: 64
+        class_weight: balanced
+        n_jobs: -1
+        random_state: 42
+      requires_scaling: false
+
+# -----------------------------------------------------------------------------
+# Imbalance handling
+# -----------------------------------------------------------------------------
+imbalance:
+  strategies:
+    - none            # baseline, real distribution
+    - class_weight
+    - undersampling
+    - oversampling
+  # For IDS the priority is RECALL on attacks + low FNR, not raw accuracy.
+  never_use_only: accuracy_score
+
+# -----------------------------------------------------------------------------
+# Threshold sweep (binary IDS)  (spec section 18)
+# -----------------------------------------------------------------------------
+thresholds:
+  binary: [0.3, 0.4, 0.5, 0.6, 0.7]
+  default: 0.5
+
+# -----------------------------------------------------------------------------
+# Feature selection experiments (spec section 16)
+# -----------------------------------------------------------------------------
+feature_selection:
+  methods:
+    - random_forest_importance
+    - permutation_importance
+    - shap                       # only on a small sample
+  top_k_candidates: [39, 30, 20, 15, 10]
+
+# -----------------------------------------------------------------------------
+# Preprocessing pipeline (spec section 17)
+# -----------------------------------------------------------------------------
+preprocessing:
+  handle_nan: true
+  nan_strategy: median           # robust to flow-feature outliers
+  handle_inf: true
+  inf_strategy: clip             # replace +-inf with column max/min
+  scale_for_tree_models: false   # tree models do not need scaling
+  scale_for_linear_models: true  # logistic regression needs it
+  scaler: standard               # standard / minmax / robust
+  fit_on: train                  # NEVER on full corpus
+
+# -----------------------------------------------------------------------------
+# Exported model artefacts  (spec section 20)
+# -----------------------------------------------------------------------------
+export:
+  binary_dir: models/binary
+  multiclass_dir: models/multiclass
+  edge_dir: models/edge
+  artefacts:
+    - model.joblib
+    - preprocessing.joblib
+    - features.json
+    - metadata.json
+  metadata_fields:
+    - model
+    - version
+    - features
+    - training_dataset
+    - seed
+    - metrics
+    - threshold
+
+# -----------------------------------------------------------------------------
+# Simulation / live IDS  (spec sections 21-25)
+# -----------------------------------------------------------------------------
+simulation:
+  mode: docker_vm                # docker + linux VM first
+  isolated_only: true            # NO attack traffic to external networks
+  capture:
+    interface: eth0
+    backend: scapy               # scapy for crafting; pyshark optional for capture
+    timeout_sec: 60
+  flow_extraction:
+    window_sec: 5                # CICIoT2023 uses window-based features
+    bidirectional: true
+    idle_timeout_sec: 10
+  alert:
+    log_path: simulation/traffic/alerts.log
+    min_confidence: 0.5
+    severity_thresholds:
+      high:    0.85
+      medium:  0.65
+      low:     0.50
+
+# -----------------------------------------------------------------------------
+# Edge deployment (Raspberry Pi)  (spec sections 26-28)
+# -----------------------------------------------------------------------------
+edge:
+  target: raspberry_pi_4b
+  benchmark_rows: [100, 1000, 10000]
+  metrics:
+    - avg_inference_ms
+    - p95_inference_ms
+    - cpu_percent
+    - ram_mb
+    - throughput_flows_per_sec
+    - accuracy
+    - f1
+    - recall
+  compare_with: pc
+
+# -----------------------------------------------------------------------------
+# Dashboard  (spec section 30)
+# -----------------------------------------------------------------------------
+dashboard:
+  framework: streamlit
+  port: 8501
+  refresh_sec: 5
+  panels:
+    - total_flows
+    - benign_flows
+    - attack_flows
+    - attack_distribution
+    - current_detection
+    - confidence
+    - recent_alerts
+    - cpu_ram
+
+# -----------------------------------------------------------------------------
+# Evaluation — two levels  (spec section 31)
+# -----------------------------------------------------------------------------
+evaluation:
+  ml_level:
+    - accuracy
+    - precision_macro
+    - recall_macro
+    - f1_macro
+    - f1_weighted
+    - balanced_accuracy
+    - confusion_matrix
+    - fpr
+    - fnr
+  system_level:
+    - latency_ms
+    - throughput_flows_per_sec
+    - ram_mb
+    - cpu_percent
+    - model_size_kb
+    - detection_delay_ms

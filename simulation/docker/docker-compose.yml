@@ -1,0 +1,75 @@
+# simulation/docker/docker-compose.yml
+#
+# Isolated Docker network with three "IoT device" containers and one IDS sensor.
+# ONLY for testing the live IDS. No traffic leaves this network.
+#
+# Build images first:
+#   docker compose build
+# Then bring it up:
+#   docker compose up -d
+#
+# Inside the IDS sensor container, run:
+#   python -m src.simulation.simulator --live --duration 60 --model-dir models/binary/XGBoost
+
+version: "3.9"
+
+networks:
+  iot_lab:
+    driver: bridge
+    internal: true        # ISOLATED — no internet egress
+
+services:
+
+  iot_device_1:
+    build: ./iot_device
+    container_name: iot_device_1
+    networks: [iot_lab]
+    environment:
+      - DEVICE_ROLE=temperature_sensor
+      - POLL_INTERVAL=5
+    command: ["python", "/app/sim_device.py"]
+    restart: unless-stopped
+
+  iot_device_2:
+    build: ./iot_device
+    container_name: iot_device_2
+    networks: [iot_lab]
+    environment:
+      - DEVICE_ROLE=humidity_sensor
+      - POLL_INTERVAL=3
+    command: ["python", "/app/sim_device.py"]
+    restart: unless-stopped
+
+  iot_device_3:
+    build: ./iot_device
+    container_name: iot_device_3
+    networks: [iot_lab]
+    environment:
+      - DEVICE_ROLE=mqtt_broker
+    command: ["python", "/app/sim_device.py", "--broker"]
+    restart: unless-stopped
+
+  attacker:
+    build: ./iot_device
+    container_name: attacker
+    networks: [iot_lab]
+    environment:
+      - DEVICE_ROLE=attacker
+    command: ["python", "/app/sim_device.py", "--attack"]
+    profiles: ["attack"]   # opt-in: docker compose --profile attack up
+    restart: "no"
+
+  ids_sensor:
+    build: ./ids_sensor
+    container_name: ids_sensor
+    networks: [iot_lab]
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ../../:/workspace
+    working_dir: /workspace
+    environment:
+      - PYTHONPATH=/workspace
+    command: ["sleep", "infinity"]
+    restart: unless-stopped

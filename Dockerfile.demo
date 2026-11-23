@@ -1,0 +1,52 @@
+# Dockerfile.demo — single-container IDS demo
+# Builds a self-contained image that can run the demo without any host setup.
+#
+# Build:
+#   docker build -t ciciot2023-ids-demo -f Dockerfile.demo .
+#
+# Run:
+#   docker run --rm ciciot2023-ids-demo
+#
+# Or run the dashboard:
+#   docker run --rm -p 8501:8501 ciciot2023-ids-demo streamlit run demo_dashboard.py
+
+FROM python:3.11-slim
+
+# System deps for scapy (libpcap) and Java for PySpark (only needed if re-ingesting)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libpcap0.8 \
+        iproute2 \
+        net-tools \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy requirements and install Python deps
+COPY requirements.txt .
+RUN pip install --no-cache-dir \
+        scapy==2.8.0 \
+        scikit-learn \
+        xgboost \
+        lightgbm \
+        joblib \
+        pyyaml \
+        pandas \
+        numpy \
+        matplotlib \
+        seaborn \
+        streamlit \
+        plotly \
+        pyspark \
+    && pip install --no-cache-dir imbalanced-learn
+
+# Copy the repo
+COPY . .
+
+# Copy demo scripts
+COPY demo.py demo_dashboard.py ./
+
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+
+# Default: run the terminal demo
+CMD ["python", "demo.py"]

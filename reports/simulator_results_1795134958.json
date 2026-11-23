@@ -1,0 +1,371 @@
+[
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50000|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 1.2284,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50001|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.574,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50002|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5669,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50003|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5075,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50004|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4932,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50005|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4983,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50006|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.495,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50007|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5259,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50008|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5016,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50009|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4883,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50010|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4784,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50011|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4867,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50012|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4843,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50013|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4884,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50014|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.515,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50015|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5255,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50016|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5013,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50017|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4797,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50018|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.8025,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50019|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4851,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50020|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4812,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50021|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4983,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50022|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5084,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50023|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5349,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50024|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4904,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50025|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4784,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50026|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4899,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50027|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5049,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50028|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5017,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50029|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.506,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50030|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4754,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50031|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5165,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50032|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4875,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50033|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4926,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50034|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4759,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50035|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4798,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50036|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5069,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50037|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5151,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50038|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5223,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.10|10.0.0.20|50039|80|6",
+    "packet_count": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.497,
+    "alert": null
+  },
+  {
+    "flow_key": "10.0.0.20|10.0.0.99|80|40000|6",
+    "packet_count": 500,
+    "prediction": 1,
+    "label": "Attack",
+    "confidence": 0.998324,
+    "inference_ms": 0.5159,
+    "alert": "[ALERT]\nTime: 2026-11-20 00:35:58\nDetection: ATTACK\nClass: Attack\nConfidence: 0.9983\nSeverity: HIGH\nFlow: 10.0.0.20|10.0.0.99|80|40000|6\nPackets: 500"
+  }
+]

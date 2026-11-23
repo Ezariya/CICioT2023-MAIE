@@ -1,0 +1,100 @@
+# =============================================================================
+# CICIoT2023 feature schema
+# The CSV release contains flow/window-based statistical features, NOT raw
+# packet payloads. These ~47 features are the inputs the ML model expects.
+# Reference: CICIoT2023 methodology (DOI 10.1016/j.iot.2024.101014)
+# =============================================================================
+
+target:
+  name: label
+  type: string
+  description: "Attack label (Benign or one of 27 attack types)"
+
+# -----------------------------------------------------------------------------
+# Flow-level statistical features
+# Each feature is computed by the dataset authors over a flow/window.
+# We use these directly; we do NOT re-extract from PCAP for the offline model.
+# -----------------------------------------------------------------------------
+features:
+  # --- Volume / aggregate --------------------------------------------------
+  - { name: flow_duration,            dtype: float64 }
+  - { name: Header_Length,            dtype: float64 }
+  - { name: Protocol Type,            dtype: float64 }
+  - { name: Duration,                 dtype: float64 }
+  - { name: Rate,                     dtype: float64 }
+  - { name: Srate,                    dtype: float64 }
+  - { name: Drate,                    dtype: float64 }
+  - { name: fin_flag_count,           dtype: float64 }
+  - { name: syn_flag_count,           dtype: float64 }
+  - { name: rst_flag_count,           dtype: float64 }
+  - { name: psh_flag_count,           dtype: float64 }
+  - { name: ack_flag_count,           dtype: float64 }
+  - { name: ece_flag_count,           dtype: float64 }
+  - { name: cwr_flag_count,           dtype: float64 }
+  - { name: ack_count,                dtype: float64 }
+  - { name: syn_count,                dtype: float64 }
+  - { name: fin_count,                dtype: float64 }
+  - { name: urg_count,                dtype: float64 }
+  - { name: rst_count,                dtype: float64 }
+  # --- Application protocol flags ------------------------------------------
+  - { name: HTTP,                     dtype: float64 }
+  - { name: HTTPS,                    dtype: float64 }
+  - { name: DNS,                      dtype: float64 }
+  - { name: Telnet,                   dtype: float64 }
+  - { name: SMTP,                     dtype: float64 }
+  - { name: SSH,                      dtype: float64 }
+  - { name: IRC,                      dtype: float64 }
+  - { name: TCP,                      dtype: float64 }
+  - { name: UDP,                      dtype: float64 }
+  - { name: DHCP,                     dtype: float64 }
+  - { name: ARP,                      dtype: float64 }
+  - { name: IPv4,                     dtype: float64 }
+  - { name: IPv6,                     dtype: float64 }
+  - { name: ICMP,                     dtype: float64 }
+  # --- Active / idle statistics --------------------------------------------
+  - { name: active_std,               dtype: float64 }
+  - { name: active_max,               dtype: float64 }
+  - { name: active_min,               dtype: float64 }
+  - { name: idle_std,                 dtype: float64 }
+  - { name: idle_max,                 dtype: float64 }
+  - { name: idle_min,                 dtype: float64 }
+  # --- Aggregate statistics -----------------------------------------------
+  - { name: Tot sum,                  dtype: float64 }
+  - { name: Min,                      dtype: float64 }
+  - { name: Max,                      dtype: float64 }
+  - { name: AVG,                      dtype: float64 }
+  - { name: Std,                      dtype: float64 }
+  - { name: Tot size,                 dtype: float64 }
+  - { name: IAT,                      dtype: float64 }
+  - { name: Number,                   dtype: float64 }
+  - { name: Magnitue,                 dtype: float64 }   # note: original spelling
+  - { name: Radius,                   dtype: float64 }
+  - { name: Covariance,               dtype: float64 }
+  - { name: Variance,                 dtype: float64 }
+  - { name: Weight,                   dtype: float64 }
+
+# -----------------------------------------------------------------------------
+# Data leakage audit  (spec section 8)
+# Documented drop / keep decisions — never blindly drop every column.
+# -----------------------------------------------------------------------------
+leakage_audit:
+  drop:
+    - { column: label,           reason: "target variable, must never be a feature" }
+    - { column: "source_file",   reason: "if added during ingest, encodes the attack scenario the row came from — indirect label leakage" }
+    - { column: "scenario_id",  reason: "if added during ingest, directly identifies the attack run" }
+    - { column: "timestamp",    reason: "CICIoT2023 traffic was generated in time-segregated blocks per attack; a timestamp can indirectly reveal which scenario produced the flow" }
+  keep_documented:
+    - { column: flow_duration,  reason: "legitimate flow feature; remains a feature" }
+    - { column: Rate,           reason: "legitimate traffic-rate feature" }
+  suspiciously_predictive_threshold: 0.999
+  # A feature whose single-feature AUC > threshold gets flagged here,
+  # not silently dropped. Decisions logged in reports/leakage_audit.json
+
+# -----------------------------------------------------------------------------
+# Validation thresholds
+# -----------------------------------------------------------------------------
+validation:
+  max_missing_pct: 5.0           # warn if any feature above this
+  max_infinite_pct: 1.0
+  duplicate_row_action: report   # do NOT silently drop
+  unexpected_label_action: fail  # raise if label is not in expected set

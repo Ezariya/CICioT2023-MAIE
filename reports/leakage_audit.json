@@ -1,0 +1,48 @@
+{
+  "initial_rows": 2800,
+  "dropped_columns_documented": [],
+  "rows_dropped_bad_label": 0,
+  "duplicate_rows_removed": 0,
+  "final_rows": 2800,
+  "cleaned_parquet": "/home/z/my-project/download/ciciot2023-ids/data/interim/ciciot2023_cleaned.parquet",
+  "nan_strategy": "median",
+  "inf_strategy": "clip",
+  "leakage_audit": {
+    "threshold_auc": 0.999,
+    "drop": [
+      {
+        "column": "label",
+        "reason": "target variable, must never be a feature",
+        "present_in_data": true
+      },
+      {
+        "column": "source_file",
+        "reason": "if added during ingest, encodes the attack scenario the row came from — indirect label leakage",
+        "present_in_data": false
+      },
+      {
+        "column": "scenario_id",
+        "reason": "if added during ingest, directly identifies the attack run",
+        "present_in_data": false
+      },
+      {
+        "column": "timestamp",
+        "reason": "CICIoT2023 traffic was generated in time-segregated blocks per attack; a timestamp can indirectly reveal which scenario produced the flow",
+        "present_in_data": false
+      }
+    ],
+    "kept_documented": [
+      {
+        "column": "flow_duration",
+        "reason": "legitimate flow feature; remains a feature",
+        "present_in_data": true
+      },
+      {
+        "column": "Rate",
+        "reason": "legitimate traffic-rate feature",
+        "present_in_data": true
+      }
+    ],
+    "flagged_suspicious": []
+  }
+}

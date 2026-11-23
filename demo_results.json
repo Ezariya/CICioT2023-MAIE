@@ -1,0 +1,152 @@
+[
+  {
+    "scenario": "benign",
+    "flow_key": "10.0.0.10|10.0.0.20|50000|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 1.258,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "benign",
+    "flow_key": "10.0.0.10|10.0.0.20|50001|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.6188,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "benign",
+    "flow_key": "10.0.0.10|10.0.0.20|50002|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5277,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "benign",
+    "flow_key": "10.0.0.10|10.0.0.20|50003|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.4927,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "benign",
+    "flow_key": "10.0.0.10|10.0.0.20|50004|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5175,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "benign",
+    "flow_key": "10.0.0.10|10.0.0.20|50005|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5095,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "benign",
+    "flow_key": "10.0.0.10|10.0.0.20|50006|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5013,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "benign",
+    "flow_key": "10.0.0.10|10.0.0.20|50007|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5037,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "syn_flood",
+    "flow_key": "10.0.0.20|10.0.0.99|80|40000|6",
+    "packets": 300,
+    "prediction": 1,
+    "label": "Attack",
+    "confidence": 0.998324,
+    "inference_ms": 0.67,
+    "attack_probability": 0.998324
+  },
+  {
+    "scenario": "mixed",
+    "flow_key": "10.0.0.10|10.0.0.20|50000|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.6492,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "mixed",
+    "flow_key": "10.0.0.10|10.0.0.20|50001|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5773,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "mixed",
+    "flow_key": "10.0.0.10|10.0.0.20|50002|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5286,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "mixed",
+    "flow_key": "10.0.0.10|10.0.0.20|50003|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.551,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "mixed",
+    "flow_key": "10.0.0.10|10.0.0.20|50004|80|6",
+    "packets": 5,
+    "prediction": 0,
+    "label": "Benign",
+    "confidence": 0.97273,
+    "inference_ms": 0.5103,
+    "attack_probability": 0.02727
+  },
+  {
+    "scenario": "mixed",
+    "flow_key": "10.0.0.20|10.0.0.99|80|40000|6",
+    "packets": 200,
+    "prediction": 1,
+    "label": "Attack",
+    "confidence": 0.998324,
+    "inference_ms": 0.5296,
+    "attack_probability": 0.998324
+  }
+]

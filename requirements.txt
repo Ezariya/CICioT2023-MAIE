@@ -1,0 +1,61 @@
+# =============================================================================
+# CICIoT2023 AI-Based IoT IDS — Python dependencies
+# Two layers:
+#   1. Large-data ingestion (PySpark) for the 46M-row CICIoT2023 CSV corpus
+#   2. ML / inference / simulation / dashboard for training, edge and demos
+# Install with:  pip install -r requirements.txt
+# =============================================================================
+
+# --- Configuration -----------------------------------------------------------
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# --- Large-data ingestion (PySpark) -----------------------------------------
+pyspark>=3.5.0
+findspark>=2.0.1
+
+# --- Pandas (only for small samples, visualisation, debugging) --------------
+pandas>=2.0.0
+numpy>=1.24.0
+
+# --- ML framework ------------------------------------------------------------
+scikit-learn>=1.3.0
+xgboost>=2.0.0
+lightgbm>=4.0.0
+imbalanced-learn>=0.11.0          # optional oversampling experiments
+
+# --- Interpretability --------------------------------------------------------
+shap>=0.43.0                      # optional, slow on full data
+
+# --- Persistence / metadata --------------------------------------------------
+joblib>=1.3.0
+jsonschema>=4.20.0
+
+# --- Plots -------------------------------------------------------------------
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# --- Notebooks ---------------------------------------------------------------
+jupyterlab>=4.0.0
+ipykernel>=6.25.0
+ipywidgets>=8.0.0
+
+# --- Simulation: packet capture & flow extraction ---------------------------
+scapy>=2.5.0                      # packet crafting / parsing
+pyshark>=0.6                      # live capture (tshark wrapper, optional)
+
+# --- Dashboard ---------------------------------------------------------------
+streamlit>=1.29.0
+plotly>=5.18.0
+
+# --- Testing -----------------------------------------------------------------
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# --- Dev tooling -------------------------------------------------------------
+black>=23.10.0
+ruff>=0.1.6
+
+# --- Raspberry Pi extras (install only on the Pi) ----------------------------
+# psutil>=5.9.0      # CPU / RAM benchmarking
+# onnxruntime>=1.16  # optional optimised inference

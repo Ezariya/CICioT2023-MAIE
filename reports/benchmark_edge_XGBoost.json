@@ -1,0 +1,89 @@
+{
+  "model": "XGBoost",
+  "task": "binary",
+  "feature_count": 52,
+  "model_size_kb": 210.9,
+  "n_rows": 100,
+  "timing": {
+    "avg_inference_ms": 0.2054,
+    "p50_inference_ms": 0.1956,
+    "p95_inference_ms": 0.2443,
+    "p99_inference_ms": 0.342,
+    "max_inference_ms": 0.3975,
+    "min_inference_ms": 0.1765,
+    "throughput_flows_per_sec": 4867.69,
+    "n_rows": 100
+  },
+  "ram_mb": 161.75,
+  "cpu_percent": 0.0,
+  "host": "pc",
+  "metrics_from_metadata": {
+    "accuracy": 1.0,
+    "precision_macro": 1.0,
+    "recall_macro": 1.0,
+    "f1_macro": 1.0,
+    "f1_weighted": 1.0,
+    "balanced_accuracy": 1.0,
+    "confusion_matrix": [
+      [
+        15,
+        0
+      ],
+      [
+        0,
+        405
+      ]
+    ],
+    "tn": 15,
+    "fp": 0,
+    "fn": 0,
+    "tp": 405,
+    "fpr": 0.0,
+    "fnr": 0.0,
+    "tpr": 1.0,
+    "tnr": 1.0,
+    "precision_attack": 1.0,
+    "recall_attack": 1.0,
+    "train_time_s": 0.205,
+    "avg_inference_ms": 0.0039,
+    "threshold_sweep": {
+      "0.30": {
+        "f1_macro": 1.0,
+        "recall_attack": 1.0,
+        "precision_attack": 1.0,
+        "fpr": 0.0,
+        "fnr": 0.0
+      },
+      "0.40": {
+        "f1_macro": 1.0,
+        "recall_attack": 1.0,
+        "precision_attack": 1.0,
+        "fpr": 0.0,
+        "fnr": 0.0
+      },
+      "0.50": {
+        "f1_macro": 1.0,
+        "recall_attack": 1.0,
+        "precision_attack": 1.0,
+        "fpr": 0.0,
+        "fnr": 0.0
+      },
+      "0.60": {
+        "f1_macro": 1.0,
+        "recall_attack": 1.0,
+        "precision_attack": 1.0,
+        "fpr": 0.0,
+        "fnr": 0.0
+      },
+      "0.70": {
+        "f1_macro": 1.0,
+        "recall_attack": 1.0,
+        "precision_attack": 1.0,
+        "fpr": 0.0,
+        "fnr": 0.0
+      }
+    },
+    "model_size_kb": 210.9,
+    "preprocessing_size_kb": 3.77
+  }
+}

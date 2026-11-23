@@ -1,0 +1,24 @@
+# deployment/raspberry_pi/ids.service
+# systemd unit for the edge IDS on a Raspberry Pi.
+# Copy to /etc/systemd/system/ids.service and:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now ids
+
+[Unit]
+Description=CICIoT2023 AI-based IoT IDS — edge inference on Raspberry Pi
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/pi/ciciot2023-ids
+Environment=PYTHONPATH=/home/pi/ciciot2023-ids
+ExecStart=/home/pi/idsenv/bin/python -m src.simulation.simulator --live --duration 86400 --model-dir models/binary/XGBoost --interface eth0
+Restart=on-failure
+RestartSec=10
+StandardOutput=append:/var/log/ids.log
+StandardError=append:/var/log/ids.log
+
+[Install]
+WantedBy=multi-user.target

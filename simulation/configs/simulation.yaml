@@ -1,0 +1,45 @@
+# simulation/configs/simulation.yaml
+#
+# Live-simulation configuration. Used by src.simulation.simulator.
+# This file overrides values in config.yaml:simulation when running
+# the live Docker-based IDS.
+
+network:
+  name: iot_lab
+  isolated: true
+  cidr: 172.28.0.0/16
+
+devices:
+  - name: iot_device_1
+    role: temperature_sensor
+    poll_interval_s: 5
+  - name: iot_device_2
+    role: humidity_sensor
+    poll_interval_s: 3
+  - name: iot_device_3
+    role: mqtt_broker
+  - name: attacker
+    role: attacker
+    profile: attack
+    optional: true
+
+ids_sensor:
+  container: ids_sensor
+  capture_interface: eth0
+  model_dir: models/binary/XGBoost
+  alert_log: simulation/traffic/alerts.log
+
+scenarios:
+  - name: benign_only
+    description: only benign devices run for 60s
+    duration_s: 60
+    profiles: []
+  - name: with_ddos_burst
+    description: attacker runs SYN flood for ~3s
+    duration_s: 60
+    profiles: [attack]
+
+safety:
+  # Hard rule: NO attack traffic leaves the docker network.
+  internal_only: true
+  external_block: true
