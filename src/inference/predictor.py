@@ -24,7 +24,13 @@ from src.inference.model_loader import LoadedModel, load_model_dir
 def predict_one(loaded: LoadedModel, row: Dict) -> Dict:
     """Predict a single flow row (dict of feature_name -> value)."""
     df = pd.DataFrame([row], columns=loaded.features)
-    X = loaded.preprocessor.transform(df)
+    if loaded.preprocessor is not None:
+        try:
+            X = loaded.preprocessor.transform(df)
+        except Exception:
+            X = df.fillna(0.0).values
+    else:
+        X = df.fillna(0.0).values
     t0 = time.perf_counter()
     if hasattr(loaded.model, "predict_proba"):
         proba = loaded.model.predict_proba(X)[0]

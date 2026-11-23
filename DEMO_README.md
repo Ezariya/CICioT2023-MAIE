@@ -113,29 +113,49 @@ The dashboard shows:
 
 ## Option 3: Docker (containerized)
 
-### Terminal demo
-
-```bash
-docker build -t ciciot2023-ids-demo -f Dockerfile.demo .
-docker run --rm -v $(pwd)/models:/app/models:ro ciciot2023-ids-demo
-```
-
-### Web dashboard via Docker
-
-```bash
-docker build -t ciciot2023-ids-demo -f Dockerfile.demo .
-docker run --rm -p 8501:8501 -v $(pwd)/models:/app/models:ro \
-    ciciot2023-ids-demo streamlit run demo_dashboard.py --server.port=8501 --server.address=0.0.0.0
-```
-
-### Docker Compose (one command)
+### Quickest: Docker Compose (Cross-platform)
 
 ```bash
 # Terminal demo
 docker compose -f docker-compose.demo.yml up demo
 
-# Web dashboard
+# Web dashboard (recommended)
 docker compose -f docker-compose.demo.yml --profile dashboard up dashboard
+```
+
+Then open `http://localhost:8501`.
+
+---
+
+### Or via `docker run`:
+
+**Build image first:**
+```bash
+docker build -t ciciot2023-ids-demo -f Dockerfile.demo .
+```
+
+**Run Web Dashboard:**
+
+- **On Windows (PowerShell):**
+```powershell
+docker run --rm -p 8501:8501 -v "${PWD}/models:/app/models:ro" ciciot2023-ids-demo streamlit run demo_dashboard.py --server.port=8501 --server.address=0.0.0.0
+```
+
+- **On Linux / macOS (bash):**
+```bash
+docker run --rm -p 8501:8501 -v "$(pwd)/models:/app/models:ro" ciciot2023-ids-demo streamlit run demo_dashboard.py --server.port=8501 --server.address=0.0.0.0
+```
+
+**Run Terminal Demo:**
+
+- **On Windows (PowerShell):**
+```powershell
+docker run --rm -v "${PWD}/models:/app/models:ro" ciciot2023-ids-demo
+```
+
+- **On Linux / macOS (bash):**
+```bash
+docker run --rm -v "$(pwd)/models:/app/models:ro" ciciot2023-ids-demo
 ```
 
 Then open `http://localhost:8501`.

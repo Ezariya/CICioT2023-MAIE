@@ -61,11 +61,13 @@ def read_packets(pcap_path: Path) -> List[Dict]:
             meta["dst_ip"] = pkt[IP].dst
             meta["proto"]  = int(pkt[IP].proto)
             meta["ip_version"] = 4
+            meta["ttl"] = int(pkt[IP].ttl)
         elif IPv6 in pkt:
             meta["src_ip"] = pkt[IPv6].src
             meta["dst_ip"] = pkt[IPv6].dst
             meta["proto"]  = int(pkt[IPv6].nh)
             meta["ip_version"] = 6
+            meta["ttl"] = int(getattr(pkt[IPv6], "hlim", 64))
         elif ARP in pkt:
             meta["src_ip"] = "arp"
             meta["dst_ip"] = "arp"
@@ -252,6 +254,18 @@ def compute_flow_features(flow_packets: List[Dict]) -> Dict[str, float]:
                        if len(lengths) > 1 and np.var(lengths) > 0 else 0.0,
         "Variance": float(np.var(lengths)),
         "Weight":   float(n),
+        # 39-feature dataset compatibility aliases
+        "fin_flag_number": float(flags.get("fin", 0)),
+        "syn_flag_number": float(flags.get("syn", 0)),
+        "rst_flag_number": float(flags.get("rst", 0)),
+        "psh_flag_number": float(flags.get("psh", 0)),
+        "ack_flag_number": float(flags.get("ack", 0)),
+        "ece_flag_number": float(flags.get("ece", 0)),
+        "cwr_flag_number": float(flags.get("cwr", 0)),
+        "Time_To_Live": float(np.mean([p.get("ttl", 64.0) for p in flow_packets])) if flow_packets else 64.0,
+        "IPv": float(1.0 if (n_ipv4 + n_ipv6 > 0) else 0.0),
+        "LLC": 0.0,
+        "IGMP": 0.0,
     }
     # ensure all expected columns present
     for c in FEATURE_COLUMNS:

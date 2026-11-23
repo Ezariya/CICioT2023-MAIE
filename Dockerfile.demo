@@ -12,11 +12,12 @@
 
 FROM python:3.11-slim
 
-# System deps for scapy (libpcap) and Java for PySpark (only needed if re-ingesting)
+# System deps for scapy (libpcap), LightGBM (libgomp1), and network tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libpcap0.8 \
         iproute2 \
         net-tools \
+        libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -24,7 +25,7 @@ WORKDIR /app
 # Copy requirements and install Python deps
 COPY requirements.txt .
 RUN pip install --no-cache-dir \
-        scapy==2.8.0 \
+        scapy>=2.5.0 \
         scikit-learn \
         xgboost \
         lightgbm \

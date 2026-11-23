@@ -67,7 +67,8 @@ def make_packet(src, dst, sport, dport, flags, ts, payload=None):
     return p
 
 
-def gen_benign(base, n=8):
+def gen_benign(base, n_flows=8, **kwargs):
+    n = kwargs.get("n", n_flows)
     pkts = []
     for f in range(n):
         sport = 50000 + f
@@ -128,19 +129,22 @@ def extract_and_predict(loaded, packets, scenario):
 
 
 # ---------------------------------------------------------------------------
-# Auto-find model
+# Auto-find model(s)
 # ---------------------------------------------------------------------------
-def find_model():
+def find_models():
+    found = []
     for root in [Path("."), Path(".."), Path("/content/ciciot2023-ids"), REPO]:
         for subdir in ["binary", "multiclass"]:
             base = root / "models" / subdir
             if not base.exists():
                 continue
-            for name in ["XGBoost", "LightGBM", "RandomForest", "LogisticRegression"]:
+            for name in ["RandomForest", "XGBoost", "LightGBM", "LogisticRegression", "DecisionTree"]:
                 p = base / name
                 if (p / "model.joblib").exists():
-                    return str(p)
-    return ""
+                    p_str = str(p)
+                    if p_str not in found:
+                        found.append(p_str)
+    return found
 
 
 # ---------------------------------------------------------------------------
@@ -158,13 +162,14 @@ def load_model(model_dir: str):
 st.sidebar.title("🛡️ CICIoT2023 IDS")
 st.sidebar.markdown("---")
 
-model_dir = find_model()
-if model_dir:
-    st.sidebar.success(f"Model: `{model_dir}`")
+available_models = find_models()
+if available_models:
+    model_dir = st.sidebar.selectbox("Select Model", available_models, index=0)
     loaded = load_model(model_dir)
     meta = loaded.metadata
-    st.sidebar.markdown(f"**Algorithm**: {meta.get('model', '?')}")
-    st.sidebar.markdown(f"**Task**: {meta.get('task', '?')}")
+    algo_name = meta.get('model') or Path(model_dir).name
+    st.sidebar.markdown(f"**Algorithm**: {algo_name}")
+    st.sidebar.markdown(f"**Task**: {loaded.task}")
     st.sidebar.markdown(f"**Features**: {len(loaded.features)}")
     st.sidebar.markdown(f"**Threshold**: {loaded.threshold}")
     m = meta.get("metrics", {})
@@ -172,10 +177,14 @@ if model_dir:
         st.sidebar.markdown("---")
         st.sidebar.markdown("**Training metrics**")
         col1, col2 = st.sidebar.columns(2)
-        col1.metric("Macro-F1", f"{m.get('f1_macro', 0):.3f}")
-        col2.metric("Accuracy", f"{m.get('accuracy', 0):.3f}")
-        col1.metric("FPR", f"{m.get('fpr', 0):.3f}")
-        col2.metric("FNR", f"{m.get('fnr', 0):.3f}")
+        f1_val = m.get('f1_macro', m.get('f1', 0))
+        acc_val = m.get('accuracy', 0)
+        fpr_val = m.get('fpr', m.get('FPR', 0))
+        fnr_val = m.get('fnr', m.get('FNR', 0))
+        col1.metric("Macro-F1", f"{float(f1_val):.3f}")
+        col2.metric("Accuracy", f"{float(acc_val):.3f}")
+        col1.metric("FPR", f"{float(fpr_val):.3f}")
+        col2.metric("FNR", f"{float(fnr_val):.3f}")
 else:
     st.sidebar.error("No model found!\nTrain a model first or specify path.")
     st.stop()

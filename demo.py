@@ -95,13 +95,17 @@ def load_model(model_dir: str):
         sys.exit(1)
 
     loaded = load_model_dir(p)
-    print(ok(f"[loaded] model={loaded.metadata.get('model', '?')}  "
+    model_name = loaded.metadata.get('model') or p.name
+    print(ok(f"[loaded] model={model_name}  "
              f"task={loaded.task}  features={len(loaded.features)}  "
              f"threshold={loaded.threshold}"))
     if loaded.metadata.get("metrics"):
         m = loaded.metadata["metrics"]
-        print(f"         macro_f1={m.get('f1_macro', '?')}  "
-              f"fpr={m.get('fpr', '?')}  fnr={m.get('fnr', '?')}")
+        f1_m = m.get('f1_macro', m.get('f1', '?'))
+        fpr_m = m.get('fpr', m.get('FPR', '?'))
+        fnr_m = m.get('fnr', m.get('FNR', '?'))
+        print(f"         macro_f1={f1_m}  "
+              f"fpr={fpr_m}  fnr={fnr_m}")
     return loaded
 
 
@@ -111,8 +115,8 @@ def auto_find_model() -> str:
         base = Path("models") / subdir
         if not base.exists():
             continue
-        # Prefer XGBoost, then LightGBM, then RandomForest, then anything
-        for name in ["XGBoost", "LightGBM", "RandomForest", "LogisticRegression", "DecisionTree"]:
+        # Prefer RandomForest, then XGBoost, then LightGBM, then anything
+        for name in ["RandomForest", "XGBoost", "LightGBM", "LogisticRegression", "DecisionTree"]:
             p = base / name
             if (p / "model.joblib").exists():
                 return str(p)
@@ -126,7 +130,7 @@ def auto_find_model() -> str:
             base = root / "models" / subdir
             if not base.exists():
                 continue
-            for name in ["XGBoost", "LightGBM", "RandomForest"]:
+            for name in ["RandomForest", "XGBoost", "LightGBM"]:
                 p = base / name
                 if (p / "model.joblib").exists():
                     return str(p)
