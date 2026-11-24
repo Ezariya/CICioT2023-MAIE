@@ -1,18 +1,12 @@
-# Dockerfile.demo — single-container IDS demo
-# Builds a self-contained image that can run the demo without any host setup.
-#
-# Build:
-#   docker build -t ciciot2023-ids-demo -f Dockerfile.demo .
-#
-# Run:
-#   docker run --rm ciciot2023-ids-demo
-#
-# Or run the dashboard:
-#   docker run --rm -p 8501:8501 ciciot2023-ids-demo streamlit run demo_dashboard.py
+# Dockerfile.demo — self-contained, portable CICIoT2023 IDS demo & SOC dashboard
+# Works out-of-the-box on Windows, Linux, and macOS without requiring volume mounts.
 
 FROM python:3.11-slim
 
-# System deps for scapy (libpcap), LightGBM (libgomp1), and network tools
+# System deps:
+# - libpcap0.8: raw packet sniffing & crafting with scapy
+# - iproute2, net-tools: network inspection utilities
+# - libgomp1: OpenMP runtime required by LightGBM
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libpcap0.8 \
         iproute2 \
@@ -22,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Copy requirements and install Python deps
+# Copy requirements and install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir \
         scapy>=2.5.0 \
@@ -37,17 +31,17 @@ RUN pip install --no-cache-dir \
         seaborn \
         streamlit \
         plotly \
-        pyspark \
+        pyarrow \
     && pip install --no-cache-dir imbalanced-learn
 
-# Copy the repo
+# Copy application code, models, and curated demo dataset
 COPY . .
 
-# Copy demo scripts
-COPY demo.py demo_dashboard.py ./
-
+# Set environment
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
 
-# Default: run the terminal demo
-CMD ["python", "demo.py"]
+EXPOSE 8501
+
+# Default command: launch the visual SOC Streamlit dashboard
+CMD ["streamlit", "run", "demo_dashboard.py", "--server.port=8501", "--server.address=0.0.0.0"]

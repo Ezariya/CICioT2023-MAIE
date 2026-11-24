@@ -24,7 +24,7 @@ ENV/
 *.swp
 *.swo
 .DS_Store
-
+data/processed/sampled_ciciot2023.parquet
 # Data — CICIoT2023 is too large to commit (~46M rows)
 data/raw/CICIoT2023/*.csv
 data/raw/CICIoT2023/*.pcap

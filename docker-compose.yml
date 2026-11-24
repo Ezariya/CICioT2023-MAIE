@@ -1,0 +1,29 @@
+version: "3.8"
+
+# CICIoT2023 AI-Powered IoT IDS — Portable Compose Configuration
+# Usage:
+#   docker compose up               # Starts the SOC web dashboard on http://localhost:8501
+#   docker compose run demo         # Runs the terminal verification demo
+
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.demo
+    image: ciciot2023-ids-demo:latest
+    container_name: ciciot2023-soc-dashboard
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+
+  demo:
+    build:
+      context: .
+      dockerfile: Dockerfile.demo
+    image: ciciot2023-ids-demo:latest
+    container_name: ciciot2023-terminal-demo
+    command: ["python", "demo.py", "--benchmark"]
+    environment:
+      - PYTHONUNBUFFERED=1

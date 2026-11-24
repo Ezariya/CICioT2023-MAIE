@@ -47,14 +47,20 @@ def predict_one(loaded: LoadedModel, row: Dict) -> Dict:
                 "inference_ms": round(latency_ms, 4),
             }
         else:
-            # multiclass
+            # multiclass (family or fine-grained)
             idx = int(np.argmax(proba))
-            classes = list(getattr(loaded.model, "classes_", range(len(proba))))
-            label = classes[idx]
+            meta_classes = loaded.metadata.get("classes")
+            if meta_classes and len(meta_classes) == len(proba):
+                label = meta_classes[idx]
+            else:
+                classes = list(getattr(loaded.model, "classes_", range(len(proba))))
+                label = classes[idx]
             latency_ms = (time.perf_counter() - t0) * 1000
+            is_attack = 0 if str(label).lower() == "benign" else 1
             return {
-                "prediction": idx,
+                "prediction": is_attack,
                 "label": str(label),
+                "class_index": idx,
                 "confidence": round(float(proba[idx]), 6),
                 "class_probabilities": [round(float(p), 6) for p in proba],
                 "inference_ms": round(latency_ms, 4),

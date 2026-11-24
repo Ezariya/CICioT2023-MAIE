@@ -1,41 +1,29 @@
-# docker-compose.demo.yml — simplified single-container IDS demo
-#
-# Usage:
-#   docker compose -f docker-compose.demo.yml up demo       # terminal demo
-#   docker compose -f docker-compose.demo.yml up dashboard  # web dashboard on :8501
-#
-# No network configuration needed. No multi-container setup.
-# Just one container that does everything.
+version: "3.8"
 
-version: "3.9"
+# docker-compose.demo.yml — simplified portable IDS demo
+# Usage:
+#   docker compose -f docker-compose.demo.yml up            # Launches web dashboard on :8501
+#   docker compose -f docker-compose.demo.yml run demo      # Launches terminal demo
 
 services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.demo
+    image: ciciot2023-ids-demo:latest
+    container_name: ciciot2023-soc-dashboard
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
 
   demo:
     build:
       context: .
       dockerfile: Dockerfile.demo
-    container_name: ciciot2023-demo
-    command: ["python", "demo.py"]
-    volumes:
-      # Mount your trained models so the container can use them
-      - ./models:/app/models:ro
-      - ./reports:/app/reports
-      - ./demo_results.json:/app/demo_results.json
+    image: ciciot2023-ids-demo:latest
+    container_name: ciciot2023-terminal-demo
+    command: ["python", "demo.py", "--benchmark"]
     environment:
-      - PYTHONPATH=/app
-
-  dashboard:
-    build:
-      context: .
-      dockerfile: Dockerfile.demo
-    container_name: ciciot2023-dashboard
-    command: ["streamlit", "run", "demo_dashboard.py", "--server.port=8501", "--server.address=0.0.0.0"]
-    ports:
-      - "8501:8501"
-    volumes:
-      - ./models:/app/models:ro
-      - ./reports:/app/reports
-    environment:
-      - PYTHONPATH=/app
-    profiles: ["dashboard"]   # opt-in: docker compose --profile dashboard up
+      - PYTHONUNBUFFERED=1
