@@ -69,7 +69,7 @@ Training, inference, and simulation are kept separate by design.
 ## 3. Setup
 
 ```bash
-git clone <this repo>
+git clone https://github.com/Ezariya/CICioT2023-MAIE.git
 cd ciciot2023-ids
 python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
@@ -162,6 +162,7 @@ These constraints are non-negotiable and are checked by `tests/`:
 | **finegrained** | 28 individual attacks | Which specific attack? (academic) |
 
 ### Models compared
+### binary Classification Results
 
 | Model | Accuracy | Precision | Recall | F1 Macro | F1 Weighted | Balanced Acc | FPR | FNR | Train (s) | Latency Mean (ms) | Latency P95 (ms) | Throughput (FPS) | Size (MB) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -173,8 +174,36 @@ These constraints are non-negotiable and are checked by `tests/`:
 | **PyTorch_ANN** | 0.9016 | 0.9365 | 0.9349 | 0.8630 | 0.9017 | 0.8637 | 0.2076 | 0.0651 | 111.5261 | 1.0053 | 2.3616 | 5,024,120 | 0.0615 |
 | **PyTorch_CNN1D** | 0.8991 | 0.9475 | 0.9192 | 0.8638 | 0.9006 | 0.8762 | 0.1667 | 0.0808 | 115.3179 | 0.8858 | 1.0502 | 1,845,961 | 0.0787 |
 
+
+
 The model with the best **accuracy/performance trade-off** is selected — not
 the one with the highest accuracy.
+
+> **Best trade-off model (family):** XGBoost
+
+### Family Classification Results
+
+| Model | Accuracy | Precision | Recall | F1 Macro | F1 Weighted | Balanced Acc | FPR | FNR | Train (s) | Latency Mean (ms) | Latency P95 (ms) | Throughput (FPS) | Size (MB) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **RandomForest** | 0.8006 | 0.6817 | 0.7311 | 0.6932 | 0.8099 | 0.7311 | 0.0289 | 0.2689 | 172.4014 | 9.7227 | 11.8688 | 49,310 | 286.0290 |
+| **XGBoost** | 0.8419 | 0.7504 | 0.7357 | 0.7412 | 0.8424 | 0.7357 | 0.0241 | 0.2643 | 52.2024 | 1.5776 | 1.7398 | 11,507 | 26.7876 |
+| **LightGBM** | 0.7909 | 0.6724 | 0.7610 | 0.6808 | 0.8076 | 0.7610 | 0.0297 | 0.2390 | 94.8844 | 1.1252 | 1.2474 | 12,351 | 4.7257 |
+| **PyTorch_ANN** | 0.8171 | 0.8447 | 0.6421 | 0.6694 | 0.8079 | 0.6421 | 0.0292 | 0.3579 | 111.6985 | 0.6590 | 0.9794 | 4,834,291 | 0.0632 |
+| **PyTorch_CNN1D** | 0.8033 | 0.7806 | 0.6299 | 0.6533 | 0.7959 | 0.6299 | 0.0308 | 0.3701 | 116.9194 | 0.9329 | 1.4034 | 1,810,529 | 0.0804 |
+
+> **Best trade-off model (family):** XGBoost
+
+### Fine-Grained Classification Results
+
+| Model | Accuracy | Precision | Recall | F1 Macro | F1 Weighted | Balanced Acc | FPR | FNR | Train (s) | Latency Mean (ms) | Latency P95 (ms) | Throughput (FPS) | Size (MB) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **RandomForest** | 0.7022 | 0.5965 | 0.6121 | 0.5829 | 0.7215 | 0.6121 | 0.0091 | 0.3879 | 103.1248 | 8.9231 | 14.2722 | 71,771 | 257.5776 |
+| **XGBoost** | 0.7756 | 0.6297 | 0.6208 | 0.6196 | 0.7684 | 0.6208 | 0.0072 | 0.3792 | 212.5867 | 5.9355 | 7.4013 | 2,178 | 75.5437 |
+| **PyTorch_ANN** | 0.7344 | 0.6030 | 0.5517 | 0.5502 | 0.7004 | 0.5517 | 0.0089 | 0.4483 | 107.7555 | 0.8966 | 1.2955 | 3,656,692 | 0.0697 |
+| **PyTorch_CNN1D** | 0.7354 | 0.6226 | 0.5489 | 0.5526 | 0.7008 | 0.5489 | 0.0090 | 0.4511 | 114.1172 | 0.8082 | 0.9053 | 1,582,808 | 0.0868 |
+
+> **Best trade-off model (fine-grained):** XGBoost
+
 
 ---
 
