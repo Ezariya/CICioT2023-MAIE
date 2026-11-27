@@ -163,12 +163,15 @@ These constraints are non-negotiable and are checked by `tests/`:
 
 ### Models compared
 
-| Model | Macro-F1 | Recall | FPR | Latency | Model size |
-| --- | --- | --- | --- | --- | --- |
-| Logistic Regression | _filled at runtime_ | | | | |
-| Decision Tree | | | | | |
-| Random Forest | | | | | |
-| XGBoost / LightGBM | | | | | |
+| Model | Accuracy | Precision | Recall | F1 Macro | F1 Weighted | Balanced Acc | FPR | FNR | Train (s) | Latency Mean (ms) | Latency P95 (ms) | Throughput (FPS) | Size (MB) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **LogisticRegression** | 0.8356 | 0.9870 | 0.7958 | 0.8073 | 0.8466 | 0.8808 | 0.0342 | 0.2042 | 9.8855 | 0.5163 | 0.6695 | 7,170,751 | 0.0023 |
+| **DecisionTree** | 0.9031 | 0.9832 | 0.8886 | 0.8773 | 0.9072 | 0.9195 | 0.0496 | 0.1114 | 16.3757 | 0.1485 | 0.1778 | 4,418,963 | 1.2999 |
+| **RandomForest** | 0.9083 | 0.9845 | 0.8944 | 0.8835 | 0.9121 | 0.9241 | 0.0461 | 0.1056 | 143.6791 | 9.7853 | 11.2220 | 57,409 | 87.6809 |
+| **XGBoost** | 0.9129 | 0.9878 | 0.8973 | 0.8893 | 0.9164 | 0.9306 | 0.0361 | 0.1027 | 11.4809 | 0.6361 | 0.7214 | 102,473 | 3.7028 |
+| **LightGBM** | 0.9125 | 0.9871 | 0.8975 | 0.8887 | 0.9161 | 0.9295 | 0.0384 | 0.1025 | 42.9734 | 1.4977 | 1.6469 | 26,517 | 2.6202 |
+| **PyTorch_ANN** | 0.9016 | 0.9365 | 0.9349 | 0.8630 | 0.9017 | 0.8637 | 0.2076 | 0.0651 | 111.5261 | 1.0053 | 2.3616 | 5,024,120 | 0.0615 |
+| **PyTorch_CNN1D** | 0.8991 | 0.9475 | 0.9192 | 0.8638 | 0.9006 | 0.8762 | 0.1667 | 0.0808 | 115.3179 | 0.8858 | 1.0502 | 1,845,961 | 0.0787 |
 
 The model with the best **accuracy/performance trade-off** is selected — not
 the one with the highest accuracy.
